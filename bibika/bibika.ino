@@ -1,39 +1,53 @@
 #include <Shieldbot.h>
 
-
 String inputString = "";         // a string to hold incoming data
 boolean stringComplete = false;  // whether the string is complete
+
 Shieldbot shieldbot = Shieldbot();
 
-void setup() {
-  
-  // initialize serial:
+void setup()
+{
+  // Инициализируем соединение по serial-порту
   Serial.begin(9600);
-  
+
+  // Задаём максимальную скорость нашей машинки
   shieldbot.setMaxSpeed(255);//255 is max
 
-  // reserve 200 bytes for the inputString:
-  inputString.reserve(200);
-  
-  // initialize digital pin 13 as an output.
-  //pinMode(13, OUTPUT);
+  // Каждая команда содержит два символа
+  inputString.reserve(2);
 }
 
-void loop() {
+void loop()
+{
   // print the string when a newline arrives:
-  if (stringComplete) {
-    Serial.println(inputString);
-    if (inputString == "on")
+  if (stringComplete)
+  {
+    if (inputString == "fw") //движение вперёд
     {
-      digitalWrite(13, HIGH);
-      shieldbot.drive(127,127); //straight forward
+      shieldbot.drive(127, 127); //straight forward
       delay(500);
-      shieldbot.stop();    
+      shieldbot.stop();
     }
-    else if (inputString == "off")
+    else if (inputString == "bw") //движение назад
     {
-      //digitalWrite(13, LOW);
+      shieldbot.drive(-127, -127);
+      delay(500);
+      shieldbot.stop();
     }
+    if (inputString == "tl") //поворот влево
+    {
+      shieldbot.drive(0, 127); //straight forward
+      delay(500);
+      shieldbot.stop();
+    }
+    else if (inputString == "tr") //поворот направо
+    {
+      shieldbot.drive(127, 0);
+      delay(500);
+      shieldbot.stop();
+    }
+
+    Serial.println(inputString);
     inputString = "";
     stringComplete = false;
   }
@@ -45,18 +59,19 @@ void loop() {
  time loop() runs, so using delay inside loop can delay
  response.  Multiple bytes of data may be available.
  */
-void serialEvent() {
-  while (Serial.available()) {
-    
+void serialEvent()
+{
+  while (Serial.available())
+  {
     // get the new byte:
     char inChar = (char)Serial.read();
-    if (inChar == '\n') {
+    if (inChar == '\n')
+    {
       stringComplete = true;
     }
     else
     {
-      inputString += inChar; 
+      inputString += inChar;
     }
   }
 }
-

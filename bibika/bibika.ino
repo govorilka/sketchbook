@@ -11,7 +11,7 @@ void setup()
   Serial.begin(9600);
 
   // Задаём максимальную скорость нашей машинки
-  shieldbot.setMaxSpeed(255);//255 is max
+  shieldbot.setMaxSpeed(255); //255 -- это максимум
 
   // Каждая команда содержит два символа
   inputString.reserve(2);
@@ -48,6 +48,7 @@ void loop()
     }
 
     Serial.println(inputString);
+
     inputString = "";
     stringComplete = false;
   }
